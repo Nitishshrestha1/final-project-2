@@ -227,10 +227,10 @@
     </div>
 
     <script>
+        const message = document.querySelector('.message')
         const renderMyTable = async () => {
             let tableHTML = ''
-            const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiU3VuaWwiLCJlbWFpbCI6InN1bmlsQGdtYWlsLmNvbSIsImlkIjoiNjkzZGQ0NzU1MWNlNTJmODZiY2M1M2ZkIn0sImlhdCI6MTc2NTY1OTg2MiwiZXhwIjoxNzY1NzQ2MjYyfQ.fpSfzb92D5f9lOG-0aTB4Jzqida4Bctg8SQwesM6jYg';
-            const message = document.querySelector('.message')
+            const token = localStorage.getItem('accessToken');
 
             const res = await fetch('/api/files/my', {
                 method: 'GET',
@@ -269,7 +269,7 @@
                     message.innerHTML = data.message
 
                     if(res.ok) {
-                        renderTable()
+                        renderMyTable()
                     } else {
                         message.innerHTML = 'File is is not deleted'
                     }
@@ -290,6 +290,7 @@
         renderMyTable()
 
         const renderPublicTable = async () => {
+            message.innerHTML = ''
             let tableHTML = ''
 
             const res = await fetch('/api/files/public')

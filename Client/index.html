@@ -3,26 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Register</title>
+    <style>
+        /* Same styling as login */
+        .form-card {
+            max-width: 350px;
+            margin: 60px auto;
+            padding: 25px;
+            border: 1px solid rgba(97, 97, 97, 0.438);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background-color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+
+        .form-card h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-card input, .form-card select {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 0.95rem;
+        }
+
+        .form-card button {
+            width: 48%;
+            padding: 10px 0;
+            margin: 5px 1%;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .form-card .btn-register {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .form-card .btn-register:hover {
+            background-color: #218838;
+        }
+
+        .form-card .btn-login {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .form-card .btn-login:hover {
+            background-color: #0056b3;
+        }
+
+        .form-card p {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .form-card a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .form-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Login</h1>
-        <form id="loginForm">
-            <div style="margin-bottom:15px;">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required 
-                       style="width:100%; padding:10px; margin-top:5px; border-radius:6px; border:1px solid #ccc;">
+    <div class="form-card">
+        <h2>Register</h2>
+        <form id="registerForm">
+            <input type="text" name="username" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <div style="display:flex; justify-content:center;">
+                <button type="submit" class="btn-register">Register</button>
             </div>
-            <div style="margin-bottom:20px;">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required 
-                       style="width:100%; padding:10px; margin-top:5px; border-radius:6px; border:1px solid #ccc;">
-            </div>
-            <button type="submit" style="width:100%; background-color:#007bff; color:white;">Login</button>
         </form>
-        <p class="message">Don't have an account? <a href="register.html" style="color:#007bff;">Register</a></p>
+        <p class="message"></p>
+        <p>Already have an account? <a href="login.html">Login</a></p>
     </div>
+
+    <script>
+        const form = document.querySelector('#registerForm')
+        const message = document.querySelector('.message')
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            const formdata = new FormData(form)
+            const plainData = Object.fromEntries(formdata.entries())
+
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(plainData)
+            })
+            const data = await res.json()
+
+            if(res.ok){
+                message.innerHTML = `${formdata.get('username')} account has been created`
+                window.location.href = '/login.html'
+            } else {
+                message.innerHTML = data.message
+            }
+        })
+
+
+    </script>
 </body>
 </html>
