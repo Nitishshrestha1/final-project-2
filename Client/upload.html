@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        #fileUpload {
+            display: flex;
+            flex-direction: column;
+            row-gap: 16px;
+            width: fit-content;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <form id="fileUpload">
+        <h2>Upload</h2>
+        <input type="file" name="file" placeholder="choose a file" required>
+
+        <select name="privacy">
+            <option value="private">Private</option>
+            <option value="public">Public</option>
+        </select>
+
+        <p class="message"></p>
+
+        <button type="submit">submit</button>
+    </form>
+
+    <script>
+        const form = document.querySelector('#fileUpload')
+        const message = document.querySelector('.message')
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            const formdata = new FormData(form)
+
+            console.log(formdata.get('privacy'))
+
+            const res = await fetch('/api/files/upload', {
+                method: 'POST',
+                body: formdata
+            })
+            const data = await res.json()
+
+            message.innerHTML = data.message
+        })
+    </script>
+</body>
+</html>

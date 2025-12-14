@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        #fileUpload {
+            display: flex;
+            flex-direction: column;
+            row-gap: 16px;
+            width: fit-content;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Uploaded Files</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody class="viewTable">
+                <tr>
+                    <td>Nitish.pdf</td>
+                    <td>
+                        <button class="btn-delete">Delete</button>
+                        <button class="btn-download" data-file-id="">Download</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const renderTable = async () => {
+            let tableHTML = ''
+            const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiU3VuaWwiLCJlbWFpbCI6InN1bmlsQGdtYWlsLmNvbSIsImlkIjoiNjkzZGQ0NzU1MWNlNTJmODZiY2M1M2ZkIn0sImlhdCI6MTc2NTY1OTg2MiwiZXhwIjoxNzY1NzQ2MjYyfQ.fpSfzb92D5f9lOG-0aTB4Jzqida4Bctg8SQwesM6jYg';
+
+            const res = await fetch('/api/files/my', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            const data = await res.json()
+
+            data.myFiles.forEach(element => {
+                tableHTML += `
+                    <tr>
+                    <td>${element.filename}</td>
+                    <td>
+                        <button class="btn-delete" data-file-id="${element._id}">Delete</button>
+                        <button class="btn-download" data-file-id="${element._id}">Download</button>
+                    </td>
+                    </tr>
+                `
+            });
+
+            document.querySelector('.viewTable').innerHTML = tableHTML
+        }
+
+        renderTable()
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        #fileUpload {
+            display: flex;
+            flex-direction: column;
+            row-gap: 16px;
+            width: fit-content;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Publicly Uploaded Files</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody class="viewTable">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const renderTable = async () => {
+            let tableHTML = ''
+            const res = await fetch('/api/files/public')
+            const data = await res.json()
+
+            data.publicFiles.forEach(element => {
+                tableHTML += `
+                    <tr>
+                    <td>${element.filename}</td>
+                    <td>
+                        <button class="btn-download" data-file-id="${element._id}">Download</button>
+                    </td>
+                    </tr>
+                `
+            });
+
+            document.querySelector('.viewTable').innerHTML = tableHTML
+        }
+
+        renderTable()
+    </script>
+</body>
+</html>
