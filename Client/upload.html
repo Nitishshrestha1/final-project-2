@@ -6,13 +6,122 @@
     <title>Document</title>
     <style>
 
-        #fileUpload {
+        /* Page container */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
             display: flex;
-            flex-direction: column;
-            row-gap: 16px;
-            width: fit-content;
-            margin-left: 20px;
+            justify-content: center;
+            min-height: 100vh;
         }
+
+        /* Form container */
+        #fileUpload {
+            background-color: #ffffff;
+            border: 1px solid rgba(97, 97, 97, 0.438);
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+            max-width: 450px;
+            height: fit-content;
+            text-align: center;
+        }
+
+        /* Form heading */
+        #fileUpload h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #333;
+        }
+
+        /* File input */
+        #fileUpload input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease;
+        }
+
+        #fileUpload input[type="file"]:hover {
+            border-color: #007bff;
+        }
+
+        /* Select dropdown */
+        #fileUpload select {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 0.95rem;
+            background-color: #fff;
+            transition: border-color 0.2s ease;
+        }
+
+        #fileUpload select:hover {
+            border-color: #007bff;
+        }
+
+        /* Message paragraph */
+        #fileUpload .message {
+            margin-bottom: 15px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* Submit button */
+        #fileUpload button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .upload {
+            padding: 10px 18px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            background-color: #28a745; /* green */
+            color: #fff;
+        }
+
+        .upload:hover {
+            background-color: #218838;
+            box-shadow: 0 4px 12px rgba(33, 136, 56, 0.4);
+        }
+
+        #fileUpload button[type="submit"]:hover {
+            background-color: #0069d9;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            #fileUpload {
+                padding: 25px 20px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -26,11 +135,14 @@
         </select>
 
         <p class="message"></p>
+        <button class="upload" onclick="window.location.href='/viewpage.html'">View File</button>
+
 
         <button type="submit">submit</button>
     </form>
 
     <script>
+        const token = JSON.stringify(localStorage.getItem('accessToken'))
         const form = document.querySelector('#fileUpload')
         const message = document.querySelector('.message')
 
@@ -43,6 +155,9 @@
 
             const res = await fetch('/api/files/upload', {
                 method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
                 body: formdata
             })
             const data = await res.json()

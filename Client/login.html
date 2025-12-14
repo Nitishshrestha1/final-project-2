@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        .form-card {
+            max-width: 350px;
+            margin: 60px auto;
+            padding: 25px;
+            border: 1px solid rgba(97, 97, 97, 0.438);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background-color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+
+        .form-card h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-card input, .form-card select {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 0.95rem;
+        }
+
+        .form-card button {
+            width: 48%;
+            padding: 10px 0;
+            margin: 5px 1%;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .form-card .btn-login {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .form-card .btn-login:hover {
+            background-color: #0056b3;
+        }
+
+        .form-card .btn-view {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .form-card .btn-view:hover {
+            background-color: #218838;
+        }
+
+        .form-card p {
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .form-card a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .form-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-card">
+        <h2>Login</h2>
+        <form>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <div style="display:flex; justify-content:center;">
+                <button type="submit" class="btn-login">Submit</button>
+            </div>
+        </form>
+        <p>Don't have an account? <a href="register.html">Register</a></p>
+    </div>
+</body>
+</html>

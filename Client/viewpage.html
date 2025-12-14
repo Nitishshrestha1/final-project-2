@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+/* Container */
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            border: 1px solid rgba(97, 97, 97, 0.438);
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Heading */
+        .container h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        thead {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        thead th {
+            padding: 12px;
+            text-align: left;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #ddd;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        tbody td {
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        /* Buttons */
+        button {
+            padding: 6px 12px;
+            margin-right: 6px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        button.btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        button.btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        button.btn-download {
+            background-color: #28a745;
+            color: white;
+        }
+
+        button.btn-download:hover {
+            background-color: #218838;  
+        }
+
+        /* Message paragraph */
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 500;
+            color: #555;
+        }
+
+        /* Tabs: Public / Private / My Files */
+        .tab-buttons {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .tab-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            background-color: #6c757d; /* default gray */
+            color: white;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .tab-buttons button.active {
+            background-color: #007bff; /* blue for active */
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+        }
+
+        .tab-buttons button:hover:not(.active) {
+            background-color: #5a6268; /* slightly darker gray */
+        }
+
+        /* Navigation buttons: Upload / Logout */
+        .header .nav-buttons button {
+            padding: 10px 18px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Upload button style */
+        .header .nav-buttons button.upload {
+            background-color: #28a745; /* green */
+            color: #fff;
+        }
+
+        .header .nav-buttons button.upload:hover {
+            background-color: #218838;
+            box-shadow: 0 4px 12px rgba(33, 136, 56, 0.4);
+        }
+
+        /* Logout button style */
+        .header .nav-buttons button.logout {
+            background-color: #dc3545; /* red */
+            color: #fff;
+        }
+
+        .header .nav-buttons button.logout:hover {
+            background-color: #c82333;
+            box-shadow: 0 4px 12px rgba(200, 35, 51, 0.4);
+        }
+
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            thead tr {
+                display: none;
+            }
+
+            tbody tr {
+                margin-bottom: 15px;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }
+
+            tbody td {
+                padding: 8px 10px;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            tbody td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                flex-basis: 50%;
+            }
+
+            button {
+                margin: 0 4px;
+            }
+        }
+</style>
+
+</head>
+<body>
+    <div class="container">
+    <div class="header">
+        <h1 class="location"></h1>
+        <div class="nav-buttons">
+            <button class="upload" onclick="window.location.href='/upload.html'">Upload File</button>
+            <button class="logout" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="tab-buttons">
+        <button class="tab active" onclick="renderMyTable()">My Files</button>
+        <button class="tab" onclick="renderPublicTable()">Public Files</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody class="viewTable">
+            <!-- Rows will be rendered dynamically -->
+        </tbody>
+    </table>
+
+    <p class="message"></p>
+</div>
+    </div>
+
+    <script>
+        const renderMyTable = async () => {
+            let tableHTML = ''
+            const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiU3VuaWwiLCJlbWFpbCI6InN1bmlsQGdtYWlsLmNvbSIsImlkIjoiNjkzZGQ0NzU1MWNlNTJmODZiY2M1M2ZkIn0sImlhdCI6MTc2NTY1OTg2MiwiZXhwIjoxNzY1NzQ2MjYyfQ.fpSfzb92D5f9lOG-0aTB4Jzqida4Bctg8SQwesM6jYg';
+            const message = document.querySelector('.message')
+
+            const res = await fetch('/api/files/my', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            const data = await res.json()
+
+            data.myFiles.forEach(element => {
+                tableHTML += `
+                    <tr>
+                    <td>${element.filename}</td>
+                    <td>
+                        <button class="btn-delete" data-file-id="${element._id}">Delete</button>
+                        <button class="btn-download" data-file-id="${element._id}">Download</button>
+                    </td>
+                    </tr>
+                `
+            });
+
+            document.querySelector('.viewTable').innerHTML = tableHTML
+
+            const header = document.querySelector('.location')
+            header.innerHTML = 'Your Files'
+
+            document.querySelector('.viewTable').addEventListener('click', async (e) => {
+                if(e.target.classList.contains('btn-delete')) {
+                    const fileId = e.target.dataset.fileId;
+                    
+                    const res = await fetch(`/api/files/${fileId}/delete`, {
+                        method: 'DELETE'
+                    }) 
+                    const data = await res.json()
+
+                    message.innerHTML = data.message
+
+                    if(res.ok) {
+                        renderTable()
+                    } else {
+                        message.innerHTML = 'File is is not deleted'
+                    }
+
+                }
+            })
+
+            
+            document.querySelector('.viewTable').addEventListener('click', async (e) => {
+                if(e.target.classList.contains('btn-download')) {
+                    const fileId = e.target.dataset.fileId
+
+                    window.location.href = `/api/files/${fileId}/download`
+                }
+            })
+        }
+
+        renderMyTable()
+
+        const renderPublicTable = async () => {
+            let tableHTML = ''
+
+            const res = await fetch('/api/files/public')
+            const data = await res.json()
+
+            data.publicFiles.forEach(element => {
+                tableHTML += `
+                    <tr>
+                    <td>${element.filename}</td>
+                    <td>
+                        <button class="btn-download" data-file-id="${element._id}">Download</button>
+                    </td>
+                    </tr>
+                `
+            });
+
+            document.querySelector('.viewTable').innerHTML = tableHTML
+
+            const header = document.querySelector('.location')
+            header.innerHTML = 'Public Files'
+
+            document.querySelector('.viewTable').addEventListener('click', async (e) => {
+                if(e.target.classList.contains('btn-download')) {
+                    const fileId = e.target.dataset.fileId
+
+                    window.location.href = `/api/files/${fileId}/download`
+                }
+            })
+        }
+
+        const logout = () => {
+            localStorage.removeItem('accessToken')
+            window.location.href = 'login.html'
+        }
+
+        
+    </script>
+</body>
+</html>
